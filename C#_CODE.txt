@@ -16,6 +16,9 @@ class Foo
   }
 }
 
+
+Meg ide is beírok valamit...
+
 class Program 
 {
   public static void Main(string[] args) 
