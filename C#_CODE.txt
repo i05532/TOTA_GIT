@@ -1,0 +1,210 @@
+https://versenycica.wordpress.com/
+
+
+//###########################################################################
+delegate void MyEventHandler();
+
+class Foo 
+{
+ public event MyEventHandler OnFoo; 
+
+ public void DoSomething() 
+  {
+   if (this.OnFoo != null)  {this.OnFoo();}
+  }
+}
+
+class Program 
+{
+  public static void Main(string[] args) 
+  {
+   Foo f = new Foo();
+   f.OnFoo += new MyEventHandler(Handler);         //Feliratkozás az eseményre
+   f.DoSomething();
+  }
+
+  public static void Handler() 
+  {
+   Console.WriteLine("Esemény lekezelve");
+  }
+}
+
+
+
+//###########################################################################
+public class Car 
+{ 
+  //////////////////////////////////////////////////////////////////////////////////////////////////////// A szükséges delegate létrehozása
+  public delegate void CarEngineHandler(string msg); 
+  //////////////////////////////////////////////////////////////////////////////// A Car osztály a következõ eseményeket definiálja
+  public event CarEngineHandler Exploded;
+  public event CarEngineHandler AboutToBlow;
+}
+//---------------------------------------------------------------------------------------------------------------------------------------
+public void Accelerate(int delta) 
+{ 
+  //////////////////////////////////////////////////////////////////////////// Ha az auto rossz, akkor elsül az Exploded esemény
+  if (carIsDead) 
+    { 
+    if (Exploded != null) 
+    Exploded(“Sorry, this car is dead…”); 
+    } 
+  else 
+    { 
+    CurrentSpeed += delta;  
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Ha már majdnem rossz
+    if (10 == MaxSpeed – CurrentSpeed && AboutToBlow != null) 
+      { 
+      AboutToBlow(“Vigyázat! Lassan elromlik…”); 
+      } 
+ 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Ha minden rendben 
+    if (CurrentSpeed >= MaxSpeed)  carIsDead = true; 
+    else Console.WriteLine(“Aktuális sebesség = {0}”, CurrentSpeed); 
+  } 
+}
+//---------------------------------------------------------------------------------------------------------------------------------------
+class Program 
+{
+  public static void CarAboutToBlow(string msg)  { Console.WriteLine(msg); } 
+  public static void CarIsAlmostDoomed(string msg)  { Console.WriteLine(“=> Critical Message from Car: {0}”, msg); } 
+  public static void CarExploded(string msg)  { Console.WriteLine(msg); }
+  
+  static void Main(string[] args) 
+  { 
+    Car c1 = new Car(“KicsiKocsi”, 100, 10); 
+    // Az eseménykezelõk beregisztrálása 
+    c1.AboutToBlow += CarIsAlmostDoomed; 
+    c1.AboutToBlow += CarAboutToBlow; 
+    c1.Exploded += CarExploded; 
+
+    Console.WriteLine(“Gyorsítás”); 
+    for (int i = 0; i < 6; i++) 
+    c1.Accelerate(20); 
+    c1.Exploded -= CarExploded; 
+
+    Console.WriteLine(“\nGyorsítás”); 
+    for (int i = 0; i < 6; i++) 
+    c1.Accelerate(20); 
+    Console.ReadLine(); 
+  } 
+}
+
+
+
+
+//###########################################################################
+public interface IShape
+{
+ double Area();
+ double Circumference();
+ int Sides();
+}
+//---------------------------------------------------------------------------------------------------------------------------------------
+public class Circle : IShape
+{
+         public int x = 0;
+         public int y = 0;
+         public double radius = 0;
+         private const double Pi = Math.PI;
+ 
+         public double Area()
+         {
+             double area = Pi * radius * radius;
+             return area;
+         }
+ 
+         public double Circumference()
+         {
+             return (2 * Pi * radius);
+         }
+ 
+         public int Sides()
+         {
+             return 1;
+         }
+ 
+         public Circle()
+         {
+             x = 0;
+             y = 0;
+             radius = 0.0;
+         }
+}
+//---------------------------------------------------------------------------------------------------------------------------------------
+public class Square : IShape
+{
+       public int side = 0;
+ 
+       public double Area()
+       {
+       return (side * side);
+       }
+ 
+      public double Circumference()
+      {
+      return (4 * side);
+      }
+ 
+      public int Sides()
+      {
+      return 4;
+      }
+ 
+     public Square()
+     {
+     side = 0;
+     }
+}
+//---------------------------------------------------------------------------------------------------------------------------------------
+private static void Display(IShape myshape)
+{
+	Console.WriteLine("terület:{0}", myshape.Area());
+	Console.WriteLine("oldalak:{0}", myshape.Sides());
+	Console.WriteLine("kerület:{0}", myshape.Circumference());
+}
+//---------------------------------------------------------------------------------------------------------------------------------------
+private static void Main(string[] args)
+{
+	Circle circle1 = new Circle();
+	circle1.radius = 7.6;
+	Console.WriteLine("kör adatai:");
+	Display(circle1);
+	Console.WriteLine();
+ 
+	Square square1 = new Square();
+	square1.side = 4;
+ 	Console.WriteLine("négyzet adatai:");
+	Display(square1);
+ 	Console.ReadLine();
+}
+
+//###########################################################################
+internal class Proba
+{
+	public static int Negyzet(int i)
+	{
+	return i * i;
+	}
+ 
+	public int Dupla(int i)
+	{
+	return 2 * i;
+	}
+}
+
+internal class Program
+{
+	delegate int Emel(int k);
+ 
+	private static void Main(string[] args)
+	{
+		Emel emel1 = new Emel(Proba.Negyzet);
+		Console.WriteLine(emel1(3));
+
+		Proba proba1 = new Proba();
+		Emel emel2 = new Emel(proba1.Dupla);
+		Console.WriteLine(emel2(2));
+		Console.ReadLine();
+	}
+}
